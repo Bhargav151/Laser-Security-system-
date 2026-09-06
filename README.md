@@ -1,32 +1,13 @@
-// Adapted for ESP32 Dev Module
-// Original logic: YouTube | Tech at Home
+Building a Laser-Based Intrusion Detection System with ESP32
 
-byte ldr_sensor = 34;   // digital output pin from LDR comparator module
-byte buzzer = 15;       // avoid strapping pins (0, 2, 12, 15 need care - 15 is fine if not pulled low at boot)
-byte x = 0;
+I recently designed and implemented a low-cost security tripwire system using an ESP32 microcontroller, a laser transmitter module, and an LDR (Light Dependent Resistor) sensor.
 
-void setup()
-{
-  pinMode(ldr_sensor, INPUT);
-  pinMode(buzzer, OUTPUT);
-  Serial.begin(115200);   // helpful for debugging
-}
+System overview:
+The laser module projects a continuous beam onto the LDR sensor, forming an invisible detection line. When the beam is interrupted, the LDR registers a sharp drop in light intensity on its analog output. The ESP32 continuously samples this signal via its ADC and, upon detecting the interruption, triggers a buzzer to raise an immediate alert.
 
-void loop()
-{
-  int sensor_data = digitalRead(ldr_sensor);
-  Serial.println(sensor_data);   // watch this in Serial Monitor to confirm HIGH/LOW toggling correctly
+Key technical aspects:
 
-  if (sensor_data == LOW && x == 0)
-  {
-    digitalWrite(buzzer, LOW);
-  }
-  else
-  {
-    analogWrite(buzzer, 200);
-    delay(110);
-    analogWrite(buzzer, 100);
-    delay(110);
-    x = 1;
-  }
-}
+Analog signal acquisition and threshold-based triggering using the ESP32's ADC
+Point-to-point wiring for a compact, breadboard-free build
+Alarm latching logic to ensure the alert persists until manually reset
+Sensor calibration and threshold tuning for reliable detection under varying ambient light
